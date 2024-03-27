@@ -127,7 +127,7 @@
 
 		$(function() {
 			$("a[href='#' ]:contains('판매상품등록')").on("click", function() {
-				self.location = "../product/addProductView.jsp";
+				self.location = "/product/addProductView.jsp";
 			});
 		});
 

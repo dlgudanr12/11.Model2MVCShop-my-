@@ -9,208 +9,123 @@
 <title>배송 목록조회</title>
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
-<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-<script type="text/javascript">
-	function fncGetList(currentPage) {
-		//document.getElementById("currentPage").value = currentPage;
-		//document.detailForm.submit();
-		$('#currentPage').val(currentPage)
-		$("form").attr("method","post").attr("action","/purchase/listDelivery").submit();
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-	}
-	$(function() {
-		$('tr.ct_list_pop').each(function(index) {
-			$("tr.ct_list_pop:nth-child("+(2*index+4)+") td:contains('배송하기') span").mouseenter(function() {
-				$(this).css("color","red");
-			}).mouseleave(function() {
-				$(this).css("color","blue");
-			})
-			$("tr.ct_list_pop:nth-child("+(2*index+4)+") td:contains('배송하기') span").css("color","blue").on("click",function() {
-				var tranNo = $("tr.ct_list_pop:nth-child("+(2*index+4)+") td:nth-child(3)").text().trim();
-				var tranCode = $("tr.ct_list_pop:nth-child("+(2*index+4)+") td:nth-child(15) input").val();
-				alert(tranNo + "/" + tranCode);
-				$.ajax("/purchaseRest/json/updateTranCode/"+ tranNo+ "/"+ tranCode,{
-					method : "GET",
-					dataType : "json",
-					headers : {
-						"Content-Type" : "application/json"
-						},
-						success : function(JSONData, status){
-							//alert(JSONData.success);
-							$("tr.ct_list_pop:nth-child(" + (2 * index + 4) + ") td:nth-child(15)").text("배송 중");
-							}
-						})
-					})
-				})
-			});
-</script>
+<!-- Bootstrap Dropdown Hover CSS -->
+<link href="/css/animate.min.css" rel="stylesheet">
+<link href="/css/bootstrap-dropdownhover.min.css" rel="stylesheet">
+
+<!-- Bootstrap Dropdown Hover JS -->
+<script src="/javascript/bootstrap-dropdownhover.min.js"></script>
+
+<style>
+body {
+	padding-top: 70px;
+}
+</style>
 
 </head>
 
 <body bgcolor="#ffffff" text="#000000">
 
+	<jsp:include page="/layout/toolbar.jsp" />
 
-	<div style="width: 98%; margin-left: 10px;">
+	<div class="container">
+
+		<div class="page-header text-info">
+			<h3>배송 관리</h3>
+		</div>
 
 		<!-- <form name="detailForm" action="/purchase/listDelivery"
 			method="post"> -->
-		<form name="detailForm">
+		<form name="detailForm" class="form-inline">
 
-			<table width="100%" height="37" border="0" cellpadding="0"
-				cellspacing="0">
-				<tr>
-					<td width="15" height="37"><img src="/images/ct_ttl_img01.gif"
-						width="15" height="37"></td>
-					<td background="/images/ct_ttl_img02.gif" width="100%"
-						style="padding-left: 10px;">
-						<table width="100%" border="0" cellspacing="0" cellpadding="0">
-							<tr>
-								<td width="93%" class="ct_ttl01">배송 관리</td>
-							</tr>
-						</table>
-					</td>
-					<td width="12" height="37"><img src="/images/ct_ttl_img03.gif"
-						width="12" height="37"></td>
-				</tr>
-			</table>
-
-			<table width="100%" border="0" cellspacing="0" cellpadding="0"
-				style="margin-top: 10px;">
-				<tr>
-
-					<td align="right">
-						<select
-							name="searchOrderBy" class="ct_input_g" style="width: 100px">
-								<option value="0" ${search.searchOrderBy=='0' ? "selected" : "" }>도착 날짜 순</option>
-								<option value="1" ${search.searchOrderBy=='1' ? "selected" : "" }>사용자ID 순</option>
-								<option value="2" ${search.searchOrderBy=='2'? "selected" : "" }>배송상태 순</option>
-						</select>
-						<select name="searchCondition" class="ct_input_g"
-						style="width: 80px">
-							<option value="0"
-								${search.searchCondition=='0' ? "selected" : "" }>사용자ID </option>
-							<option value="1"
-								${search.searchCondition=='1' ? "selected" : "" }>수령인</option>
-							<option value="2"
-								${search.searchCondition=='2' ? "selected" : "" }>상품번호</option>
-						</select> <input type="text" name="searchKeyword"
-						value="${search.searchKeyword}" class="ct_input_g"
-						style="width: 120px; height: 19px">
-					</td>
-
-					<td align="right" width="70">
-						<table border="0" cellspacing="0" cellpadding="0">
-							<tr>
-								<td width="17" height="23"><img
-									src="/images/ct_btnbg01.gif" width="17" height="23"></td>
-								<td background="/images/ct_btnbg02.gif" class="ct_btn01"
-									style="padding-top: 3px;"><a
-									href="javascript:fncGetList('1');">검색</a></td>
-								<td width="14" height="23"><img
-									src="/images/ct_btnbg03.gif" width="14" height="23"></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-
-			<table>
-				<tr>
-					<td>
-							판매 중<input type="checkbox" name="searchTranCodeOn0" value="0"
-							${! empty search.searchTranCodeOn[0]&&search.searchTranCodeOn[0]==0 ? "checked" : "" } /> 
+			<div class="row">
+				<div class="col-md-6 text-left">
+					<div class="form-group">
+						<p class="text-primary">전체 ${resultPage.totalCount} 건수, 현재 ${resultPage.currentPage } 페이지</p>
+						<div>
+							<%-- 판매 중<input type="checkbox" name="searchTranCodeOn0" value="0"
+								${! empty search.searchTranCodeOn[0]&&search.searchTranCodeOn[0]==0 ? "checked" : "" } /> --%>
 							구매 완료<input type="checkbox" name="searchTranCodeOn1" value="1"
-							${! empty search.searchTranCodeOn[1]&&search.searchTranCodeOn[1]==1 ? "checked" : "" } />
+								${! empty search.searchTranCodeOn[1]&&search.searchTranCodeOn[1]==1 ? "checked" : "" } />
 							배송 중<input type="checkbox" name="searchTranCodeOn2" value="2"
-							${! empty search.searchTranCodeOn[2]&&search.searchTranCodeOn[2]==2 ? "checked" : "" } />
+								${! empty search.searchTranCodeOn[2]&&search.searchTranCodeOn[2]==2 ? "checked" : "" } />
 							배송 완료<input type="checkbox" name="searchTranCodeOn3" value="3"
-							${! empty search.searchTranCodeOn[3]&&search.searchTranCodeOn[3]==3 ? "checked" : "" } />
-					</td>
-				</tr>
-			</table>
+								${! empty search.searchTranCodeOn[3]&&search.searchTranCodeOn[3]==3 ? "checked" : "" } />
+						</div>
+					</div>
+				</div>
 
-			<table width="100%" border="0" cellspacing="0" cellpadding="0"
-				style="margin-top: 10px;">
-				<tr>
-					<td colspan="17">전체 ${resultPage.totalCount} 건수, 현재
-						${resultPage.currentPage } 페이지</td>
-				</tr>
-				<tr>
-					<td class="ct_list_b" width="30">No</td>
-					<td class="ct_line02"></td>
-					<td class="ct_list_b" width="80">배송번호</td>
-					<td class="ct_line02"></td>
-					<td class="ct_list_b" >사용자ID</td>
-					<td class="ct_line02"></td>
-					<td class="ct_list_b" >수령인</td>
-					<td class="ct_line02"></td>
-					<td class="ct_list_b" width="150">상품명</td>
-					<td class="ct_line02"></td>
-					<td class="ct_list_b" >요청일</td>
-					<td class="ct_line02"></td>
-					<td class="ct_list_b">배송 도착 일</td>
-					<td class="ct_line02"></td>
-					<td class="ct_list_b">현재상태</td>
-					<td class="ct_line02"></td>
-					<td class="ct_list_b">배송 수량</td>
-					<td class="ct_line02"></td>
-				</tr>
-				<tr>
-					<td colspan="17" bgcolor="808285" height="1"></td>
-				</tr>
-				<c:set var="i" value="0" />
-				<c:forEach var="purchase" items="${list}">
-					<c:set var="i" value="${i+1 }" />
-					<tr class="ct_list_pop">
-						<td align="center">${i }</td>
-						<td></td>
-						<td align="left"><a
-							href="/purchase/getPurchase/${purchase.tranNo }/manage">
-							${purchase.tranNo }</a></td>
-						<td></td>
-						<td align="left">${purchase.buyer.userId }</td>
-						<td></td>
-						<td align="left">${purchase.receiverName }</td>
-						<td></td>
-						<td align="left"><a
-							href="/product/getProduct/${purchase.purchaseProd.prodNo}/search">${purchase.purchaseProd.prodName }</a>
-						</td>
-						<td></td>
-						<td align="left">${purchase.orderDate }</td>
-						<td></td>
-						<td align="left">${purchase.divyDate }</td>
-						<td></td>
-						<td align="left"><input type="hidden" value="${purchase.tranCode }"/>
-								<c:if test="${purchase.tranCode!=null}">
+				<div class="col-md-6 text-right">
+					<div class="form-group">
+						<select name="searchOrderBy" class="form-control" style="width: 130px">
+							<option value="0" ${search.searchOrderBy=='0' ? "selected" : "" }>도착 날짜 순</option>
+							<option value="1" ${search.searchOrderBy=='1' ? "selected" : "" }>사용자ID 순</option>
+							<option value="2" ${search.searchOrderBy=='2'? "selected" : "" }>배송상태 순</option>
+						</select> <select name="searchCondition" class="form-control" style="width: 120px">
+							<option value="0" ${search.searchCondition=='0' ? "selected" : "" }>사용자ID</option>
+							<option value="1" ${search.searchCondition=='1' ? "selected" : "" }>수령인</option>
+							<option value="2" ${search.searchCondition=='2' ? "selected" : "" }>상품번호</option>
+						</select> <input type="text" name="searchKeyword" value="${search.searchKeyword}" class="ct_input_g"
+							style="width: 120px; height: 19px">
+						<button type="button" class="btn btn-primary">
+							<!-- <a href="javascript:fncGetList('1');">검색</a> -->
+							검색
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<table class="table table-hover table-striped">
+				<thead>
+					<tr align="left">
+						<td align="center">No</td>
+						<td>배송번호</td>
+						<td>사용자ID</td>
+						<td>수령인</td>
+						<td>상품명</td>
+						<td>요청일</td>
+						<td>배송 도착 일</td>
+						<td>현재상태</td>
+						<td>배송 수량</td>
+					</tr>
+				</thead>
+				<tbody>
+					<c:set var="i" value="0" />
+					<c:forEach var="purchase" items="${list}">
+						<c:set var="i" value="${i+1 }" />
+						<tr class="ct_list_pop">
+							<td align="center">${i }</td>
+							<td align="left"><a href="/purchase/getPurchase/${purchase.tranNo }/manage">
+									${purchase.tranNo }</a></td>
+							<td align="left">${purchase.buyer.userId }</td>
+							<td align="left">${purchase.receiverName }</td>
+							<td align="left"><a href="/product/getProduct/${purchase.purchaseProd.prodNo}/search">${purchase.purchaseProd.prodName }</a>
+							</td>
+							<td align="left">${purchase.orderDate }</td>
+							<td align="left">${purchase.divyDate }</td>
+							<td align="left"><input type="hidden" value="${purchase.tranCode }" /> <c:if
+									test="${purchase.tranCode!=null}">
 									<c:if test="${purchase.tranCode=='1' }">구매완료
 										<!--<a href="/purchase/updateTranCode/${purchase.tranNo }/${purchase.tranCode }">배송하기</a>-->
-											<span>배송하기</span>
+										<span>배송하기</span>
 									</c:if>
 									<c:if test="${purchase.tranCode=='2' }">배송 중</c:if>
 									<c:if test="${purchase.tranCode=='3' }">배송 완료</c:if>
-								</c:if>
-							</td>
-						<td></td>
-							<td align="left">${purchase.tranQuantity} 개</td>
-						<td></td>
-					</tr>
-					<tr>
-						<td colspan="17" bgcolor="D6D7D6" height="1"></td>
-					</tr>
-				</c:forEach>
+								</c:if></td>
+							<td align="left">${purchase.tranQuantity}개</td>
+						</tr>
+					</c:forEach>
+				</tbody>
 			</table>
 
-			<table width="100%" border="0" cellspacing="0" cellpadding="0"
-				style="margin-top: 10px;">
-				<tr>
-					<td align="center"><input type="hidden" id="currentPage"
-						name="currentPage" value="" />
-						
-						<jsp:include page="../common/pageNavigatorDefault.jsp" />
-
-					</td>
-				</tr>
-			</table>
+			<input type="hidden" id="currentPage" name="currentPage" value="" />
+			<jsp:include page="../common/pageNavigatorDefault.jsp" />
 			<!--  페이지 Navigator 끝 -->
 		</form>
 	</div>
@@ -218,5 +133,65 @@
 </body>
 </html>
 
+<script type="text/javascript">
+	function fncGetList(currentPage) {
+		//document.getElementById("currentPage").value = currentPage;
+		//document.detailForm.submit();
+		$('#currentPage').val(currentPage)
+		$("form").attr("method", "post").attr("action",
+				"/purchase/listDelivery").submit();
+
+	}
+	$(function() {
+		$("button:contains('검색')").click(function() {
+			fncGetList('1');
+		})
+
+		$('tr.ct_list_pop').each(
+				function(index) {
+					$(
+							"tr.ct_list_pop:nth-child(" + (index + 1)
+									+ ") td:contains('배송하기') span").mouseenter(
+							function() {
+								$(this).css("color", "red");
+							}).mouseleave(function() {
+						$(this).css("color", "blue");
+					})
+					$(
+							"tr.ct_list_pop:nth-child(" + (index + 1)
+									+ ") td:contains('배송하기') span").css(
+							"color", "blue").click(
+							function() {
+								var tranNo = $(
+										"tr.ct_list_pop:nth-child("
+												+ (index + 1)
+												+ ") td:nth-child(2)").text()
+										.trim();
+								var tranCode = $(
+										"tr.ct_list_pop:nth-child("
+												+ (index + 1)
+												+ ") td:nth-child(8) input")
+										.val();
+								alert(tranNo + "/" + tranCode);
+								$.ajax("/purchaseRest/json/updateTranCode/"
+										+ tranNo + "/" + tranCode, {
+									method : "GET",
+									dataType : "json",
+									headers : {
+										"Content-Type" : "application/json"
+									},
+									success : function(JSONData, status) {
+										//alert(JSONData.success);
+										$(
+												"tr.ct_list_pop:nth-child("
+														+ (index + 1)
+														+ ") td:nth-child(8)")
+												.text("배송 중");
+									}
+								})
+							})
+				})
+	});
+</script>
 
 
