@@ -109,18 +109,18 @@ body {
 		$('tr.ct_list_pop').each(
 				function(index) {
 					$(
-							"tr.ct_list_pop:nth-child(" + (2 * index + 4)
+							"tr.ct_list_pop:nth-child(" + (index + 1)
 									+ ") td:contains('물건도착')").on(
 							"click",
 							function() {
 								var tranNo = $(
 										"tr.ct_list_pop:nth-child("
-												+ (2 * index + 4)
+												+ (index + 1)
 												+ ") td:nth-child(3)").text()
 										.trim();
 								var tranCode = $(
 										"tr.ct_list_pop:nth-child("
-												+ (2 * index + 4)
+												+ (index + 1)
 												+ ") td:last input").val();
 								//alert(tranNo + "/" + tranCode);
 								$.ajax("/purchaseRest/json/updateTranCode/"
@@ -134,12 +134,12 @@ body {
 										//alert(JSONData.success);
 										$(
 												"tr.ct_list_pop:nth-child("
-														+ (2 * index + 4)
+														+ (index + 1)
 														+ ") td:last").empty();
 										$(
 												"tr.ct_list_pop:nth-child("
-														+ (2 * index + 4)
-														+ ") td:nth-child(15)")
+														+ (index + 1)
+														+ ") td:nth-child(8)")
 												.text("배송완료");
 									}
 								})

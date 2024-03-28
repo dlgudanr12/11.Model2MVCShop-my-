@@ -71,7 +71,7 @@ body {
 							<option value="0" ${search.searchCondition=='0' ? "selected" : "" }>사용자ID</option>
 							<option value="1" ${search.searchCondition=='1' ? "selected" : "" }>수령인</option>
 							<option value="2" ${search.searchCondition=='2' ? "selected" : "" }>상품번호</option>
-						</select> <input type="text" name="searchKeyword" value="${search.searchKeyword}" class="ct_input_g"
+						</select> <input type="text" name="searchKeyword" value="${search.searchKeyword}" class="form-control"
 							style="width: 120px; height: 19px">
 						<button type="button" class="btn btn-primary">
 							<!-- <a href="javascript:fncGetList('1');">검색</a> -->

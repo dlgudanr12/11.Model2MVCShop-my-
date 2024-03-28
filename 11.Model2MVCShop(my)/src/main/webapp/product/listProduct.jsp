@@ -127,35 +127,39 @@ body {
 				</tbody> 
 			</table>--%>
 			<!-- <div class="page-header"></div> -->
-
-			<div class="row" id="ct_list_pop">
-				<c:set var="i" value="0" />
-				<c:forEach var="product" items="${list}">
-					<c:set var="i" value="${i+1 }" />
-					<div class="col-sm-4">
-						<div class="panel panel-default" >
-							<div class="panel-heading">
-								<h3 class="panel-title">${i }.
-									<input class="ct_prodNo" value="${product.prodNo}" type="hidden" />${product.prodName }
-								</h3>
-							</div>
-							<div class="panel-body">
-								<p>
-									<a href="#" class="thumbnail"> <img src="/images/uploadFiles/${product.fileList[0]}">
-									</a>
-								</p>
-								<p>가격 : ${product.price }</p>
-								<p>등록일 : ${product.regDate }</p>
-								<p>
-									<c:if test="${ product.prodQuantity!=0}"> 판매 중 </c:if>
-									<c:if test="${ product.prodQuantity==0}"> 재고 없음 </c:if>
-								</p>
-								<p>재고 : ${product.prodQuantity}개</p>
-							</div>
+			<table>
+				<tr>
+					<td>
+						<div class="row" id="ct_list_pop">
+							<c:set var="i" value="0" />
+							<c:forEach var="product" items="${list}">
+								<c:set var="i" value="${i+1 }" />
+								<div class="col-md-4 col-xs-12">
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h3 class="panel-title">${i }.
+												<input class="ct_prodNo" value="${product.prodNo}" type="hidden" />${product.prodName }
+											</h3>
+										</div>
+										<div class="panel-body">
+											<a href="#" class="thumbnail col-md-6 col-xs-8"> <img
+												src="/images/uploadFiles/${product.fileList[0]}">
+											</a>
+											<p>&nbsp; 가격 : ${product.price }</p>
+											<p>&nbsp; 등록일 : ${product.regDate }</p>
+											<p>
+												<c:if test="${ product.prodQuantity!=0}">&nbsp; 판매 중 </c:if>
+												<c:if test="${ product.prodQuantity==0}">&nbsp; 재고 없음 </c:if>
+											</p>
+											<p>&nbsp; 재고 : ${product.prodQuantity}개</p>
+										</div>
+									</div>
+								</div>
+							</c:forEach>
 						</div>
-					</div>
-				</c:forEach>
-			</div>
+					</td>
+				</tr>
+			</table>
 		</div>
 		<!--<div class="container ">-->
 	</form>
@@ -204,27 +208,158 @@ body {
 		});
 	} */
 
+	var prodNo;
+	var menu = "${menu}";
 	function fncLink() {
 		$('div.panel-heading').each(
+				
 				function(index) {
-					$("div.panel-heading:eq(" + index+ ")" ).click(
+					
+					$("div.panel-heading:eq(" + index + ")").click(
 							function() {
-								var prodNo = $("div.panel-heading:eq(" + index+ ") h3 input").val();
-								var menu = "${menu}";
+								prodNo = $(
+										"div.panel-heading:eq(" + index
+												+ ") h3 input").val();
 								//alert(prodNo + "/" + menu);
 								self.location = "/product/getProduct/" + prodNo
 										+ "/" + menu;
 							})
-							
-							$("div.panel-body:eq(" + index+ ") p img" ).click(
+
+					$("div.panel-body:eq(" + index + ") img").click(
 							function() {
-								var prodNo = $("div.panel-heading:eq(" + index+ ") h3 input").val();
-								var menu = "${menu}";
+								prodNo = $(
+										"div.panel-heading:eq(" + index
+												+ ") h3 input").val();
 								//alert(prodNo + "/" + menu);
 								self.location = "/product/getProduct/" + prodNo
 										+ "/" + menu;
 							})
 				})
+	}
+
+	var maxPage = $("input.maxPage").val();
+	var pageSize = $("input.pageSize").val();
+	var currentPage = $("input.currentPage").val();
+	var searchCondition = $("input.searchCondition").val().trim();
+	var searchKeyword = $("input.searchKeyword").val().trim();
+	var searchOrderBy = $("input.searchOrderBy").val().trim();
+	var searchPriceLowerLimit = $("input.searchPriceLowerLimit").val();
+	var searchPriceUpperLimit = $("input.searchPriceUpperLimit").val();
+	console.log("maxPage : " + maxPage + "\n pageSize : " + pageSize
+			+ "\n currentPage : " + currentPage + "\n searchCondition : "
+			+ searchCondition + "\n searchKeyword : -" + searchKeyword + "-"
+			+ "\n searchOrderBy : " + searchOrderBy
+			+ "\n searchPriceLowerLimit : " + searchPriceLowerLimit
+			+ "\n searchPriceUpperLimit : " + searchPriceUpperLimit);
+
+	function fncScrollEvent() {
+		++currentPage
+		console.log(currentPage);
+
+		$
+				.ajax(
+						"/productRest/json/listProduct",
+						{
+							method : "POST",
+							dataType : "json",
+							headers : {
+								"Content-Type" : "application/json"
+							},
+							data : JSON.stringify({
+								currentPage : currentPage,
+								searchCondition : searchCondition,
+								searchKeyword : searchKeyword,
+								searchOrderBy : searchOrderBy,
+								searchPriceLowerLimit : searchPriceLowerLimit,
+								searchPriceUpperLimit : searchPriceUpperLimit
+							}),
+							success : function(JSONData, status) {
+								/* console.log(JSONData);
+								var serverData=JSON.stringify(JSONData);
+								console.log(serverData); */
+								let i = (currentPage - 1) * pageSize;
+								var textPop2 = "";
+								$
+										.each(
+												JSONData.list,
+												function(index, product) {
+													// 여기서 index는 배열의 인덱스이고, item은 각 요소를 나타냅니다
+													++i;
+													console
+															.log("Index: "
+																	+ index
+																	+ ", Item: "
+																	+ JSON
+																			.stringify(product));
+													var quantityText = "";
+													if (product.prodQuantity != 0) {
+														quantityText = "판매 중";
+													} else {
+														quantityText = "재고 없음";
+													}
+													var regDate = new Date(
+															product.regDate);
+													var formatRegDate = regDate
+															.getFullYear()
+															+ "-"
+															+ regDate
+																	.getMonth()
+																	.toString()
+																	.padStart(
+																			2,
+																			'0')
+															+ "-"
+															+ regDate
+																	.getDate()
+																	.toString()
+																	.padStart(
+																			2,
+																			'0');
+													/* var textPop = "<tr class='ct_list_pop'><td align='center' height='200'>"
+															+ i
+															+ "</td><td align='left'><input value='"+product.prodNo+"'type='hidden' /> "
+															+ product.prodName
+															+ "</td><td align='left'>"
+															+ product.price
+															+ "</td><td align='left'>"
+															+ formatRegDate
+															+ "</td><td align='left'>"
+															+ quantityText
+															+ "</td><td align='left'>"
+															+ product.prodQuantity
+															+ "개</td></tr>"; */
+													var textPop = "<div class='col-md-4 col-xs-12'>"
+															+ "<div class='panel panel-default'>"
+															+ "<div class='panel-heading'>"
+															+ "<h3 class='panel-title'>"
+															+ i
+															+ ". <input value='"+product.prodNo+"' type='hidden' /> "
+															+ product.prodName
+															+ "</h3>"
+															+ "</div><div class='panel-body'><p>"
+															+ "<a href='#' class='thumbnail col-md-6  col-xs-8'> <img src='/images/uploadFiles/"+product.fileList[0]+"'></a>"
+															+ "</p><p>&nbsp; 가격 : "
+															+ product.price
+															+ "</p><p>&nbsp; 등록일 : "
+															+ formatRegDate
+															+ "</p>"
+															+ "<p>&nbsp; "
+															+ quantityText
+															+ "</p>"
+															+ "<p>&nbsp; 재고 : "
+															+ product.prodQuantity
+															+ "개</p></div></div></div>";
+
+													textPop2 += textPop;
+												});
+								textPop3 = "<div class='row' id='ct_list_pop'>"
+										+ textPop2 + "</div>"
+								console.log(textPop3);
+								$("#ct_list_pop:last").after(textPop3);
+								fncLink();
+							}
+						})/* end of '$.ajax' */
+
 	}
 	$(function() {
 		fncLink();
@@ -251,152 +386,27 @@ body {
 					}
 				}) */
 
-		var maxPage = $("input.maxPage").val();
-		var pageSize = $("input.pageSize").val();
-		var currentPage = $("input.currentPage").val();
-		var searchCondition = $("input.searchCondition").val().trim();
-		var searchKeyword = $("input.searchKeyword").val().trim();
-		var searchOrderBy = $("input.searchOrderBy").val().trim();
-		var searchPriceLowerLimit = $("input.searchPriceLowerLimit").val();
-		var searchPriceUpperLimit = $("input.searchPriceUpperLimit").val();
-		console.log("maxPage : " + maxPage + "\n pageSize : " + pageSize
-				+ "\n currentPage : " + currentPage + "\n searchCondition : "
-				+ searchCondition + "\n searchKeyword : -" + searchKeyword
-				+ "-" + "\n searchOrderBy : " + searchOrderBy
-				+ "\n searchPriceLowerLimit : " + searchPriceLowerLimit
-				+ "\n searchPriceUpperLimit : " + searchPriceUpperLimit);
-
 		/* $( "tfoot.a:last" ).after( $( "tfoot.a:first" ).clone() ); */
 		var last = document.body.scrollHeight - window.innerHeight;
 		console.log(document.body.scrollHeight + "/" + window.innerHeight);
+		console.log(document.body.scrollHeight == window.innerHeight);
 		if (currentPage <= maxPage) {
-			$(window)
-					.scroll(
-							function() {
-								console.log($(window).scrollTop());
-								if ($(window).scrollTop() == last) {
-									++currentPage
-									console.log(currentPage);
-									$
-											.ajax(
-													"/productRest/json/listProduct",
-													{
-														method : "POST",
-														dataType : "json",
-														headers : {
-															"Content-Type" : "application/json"
-														},
-														data : JSON
-																.stringify({
-																	currentPage : currentPage,
-																	searchCondition : searchCondition,
-																	searchKeyword : searchKeyword,
-																	searchOrderBy : searchOrderBy,
-																	searchPriceLowerLimit : searchPriceLowerLimit,
-																	searchPriceUpperLimit : searchPriceUpperLimit
-																}),
-														success : function(
-																JSONData,
-																status) {
-															/* console.log(JSONData);
-															var serverData=JSON.stringify(JSONData);
-															console.log(serverData); */
-															let i = (currentPage - 1)
-																	* pageSize;
-															var textPop2 = "";
-															$
-																	.each(
-																			JSONData.list,
-																			function(
-																					index,
-																					product) {
-																				// 여기서 index는 배열의 인덱스이고, item은 각 요소를 나타냅니다
-																				++i;
-																				console
-																						.log("Index: "
-																								+ index
-																								+ ", Item: "
-																								+ JSON
-																										.stringify(product));
-																				var quantityText = "";
-																				if (product.prodQuantity != 0) {
-																					quantityText = "판매 중";
-																				} else {
-																					quantityText = "재고 없음";
-																				}
-																				var regDate = new Date(
-																						product.regDate);
-																				var formatRegDate = regDate
-																						.getFullYear()
-																						+ "-"
-																						+ regDate
-																								.getMonth()
-																								.toString()
-																								.padStart(
-																										2,
-																										'0')
-																						+ "-"
-																						+ regDate
-																								.getDate()
-																								.toString()
-																								.padStart(
-																										2,
-																										'0');
-																				/* var textPop = "<tr class='ct_list_pop'><td align='center' height='200'>"
-																						+ i
-																						+ "</td><td align='left'><input value='"+product.prodNo+"'type='hidden' /> "
-																						+ product.prodName
-																						+ "</td><td align='left'>"
-																						+ product.price
-																						+ "</td><td align='left'>"
-																						+ formatRegDate
-																						+ "</td><td align='left'>"
-																						+ quantityText
-																						+ "</td><td align='left'>"
-																						+ product.prodQuantity
-																						+ "개</td></tr>"; */
-																				var textPop = "<div class='col-sm-4'>"
-																						+ "<div class='panel panel-default'>"
-																						+ "<div class='panel-heading'>"
-																						+ "<h3 class='panel-title'>"
-																						+ i
-																						+ ". <input value='"+product.prodNo+"' type='hidden' /> "
-																						+ product.prodName
-																						+ "</h3>"
-																						+ "</div><div class='panel-body'><p>"
-																						+ "<a href='#' class='thumbnail'> <img src='/images/uploadFiles/"+product.fileList[0]+"'></a>"
-																						+ "</p><p>가격 : "
-																						+ product.price
-																						+ "</p><p>등록일 : "
-																						+ product.regDate
-																						+ "</p>"
-																						+ "<p>"
-																						+ quantityText
-																						+ "</p>"
-																						+ "<p>재고 : "
-																						+ product.prodQuantity
-																						+ "개</p></div></div></div>";
+			if (document.body.scrollHeight == window.innerHeight) {
+					fncScrollEvent();
+			}
 
-																				textPop2 += textPop;
-																			});
-															textPop3 = "<div class='row' id='ct_list_pop'>"
-																	+ textPop2
-																	+ "</div>"
-															console
-																	.log(textPop3);
-															$(
-																	"#ct_list_pop:last")
-																	.after(
-																			textPop3);
-															fncLink();
-														}
-													})
-									window.scrollTo(0, last);//window.scrollTo(x축,y축);
-								}
-								last = document.body.scrollHeight
-										- window.innerHeight;//document.body.scrollHeight : body의 스크롤 총 높이, window.innerHeight : 창 안의 높이
-							})
-		}
+			$(window).scroll(function() {
+				console.log($(window).scrollTop());
+
+				if ($(window).scrollTop() == last) {
+					fncScrollEvent();
+
+					window.scrollTo(0, last);//window.scrollTo(x축,y축);
+				}/* end of 'if ( $(window).scrollTop() == last) ' */
+				last = document.body.scrollHeight - window.innerHeight;//document.body.scrollHeight : body의 스크롤 총 높이, window.innerHeight : 창 안의 높이
+			})/* end of '$(window).scroll(function()' */
+
+		}/* end of 'if (currentPage <= maxPage)' */
 
 		var fList = [];
 		$("input[name='searchKeyword']").keyup(
