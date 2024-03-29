@@ -124,6 +124,7 @@ public class ProductController {
 
 		System.out.println("[addProduct().POST end......]\n");
 
+//		return "forward:/product/addProduct.jsp";
 		return "forward:/product/addProduct.jsp";
 	}
 

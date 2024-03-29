@@ -8,17 +8,17 @@ import com.model2.mvc.service.domain.Purchase;
 
 public interface PurchaseDao {
 
-	public Purchase findPurchase(int tranNo) throws Exception;
+	public Purchase getPurchase(int tranNo) throws Exception;
 
-	public void insertPurchase(Purchase purchase) throws Exception;
+	public void addPurchase(Purchase purchase) throws Exception;
 
 	public void updatePurchase(Purchase purchase) throws Exception;
 
-	public void updateTranCode(Purchase purchase) throws Exception;
+	public void updateTranCode(Map<String, Object> map) throws Exception;
 
-	public List<Purchase> getPurchaseList(Search search, String buyer_Id) throws Exception;
+	public List<Purchase> getPurchaseList(Map<String, Object> map) throws Exception;
 
-	public int getTotalCount(String buyer_Id) throws Exception;
+	public int getTotalCount(Map<String, Object> map) throws Exception;
 
 	public Map<String, Object> getSaleList(Search search);
 

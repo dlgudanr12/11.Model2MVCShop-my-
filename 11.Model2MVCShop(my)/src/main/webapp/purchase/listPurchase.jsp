@@ -116,7 +116,7 @@ body {
 								var tranNo = $(
 										"tr.ct_list_pop:nth-child("
 												+ (index + 1)
-												+ ") td:nth-child(3)").text()
+												+ ") td:nth-child(2)").text()
 										.trim();
 								var tranCode = $(
 										"tr.ct_list_pop:nth-child("

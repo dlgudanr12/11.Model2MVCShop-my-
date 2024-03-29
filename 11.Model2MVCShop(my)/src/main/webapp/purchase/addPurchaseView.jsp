@@ -7,45 +7,35 @@
 
 <title>구매 생성 페이지</title>
 
-<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<!-- Bootstrap Dropdown Hover CSS -->
+<link href="/css/animate.min.css" rel="stylesheet">
+<link href="/css/bootstrap-dropdownhover.min.css" rel="stylesheet">
+
+<!-- Bootstrap Dropdown Hover JS -->
+<script src="/javascript/bootstrap-dropdownhover.min.js"></script>
 <script type="text/javascript" src="/javascript/calendar.js"></script>
-<script type="text/javascript">
-	/* function fncAddPurchase() {
-	 document.detailForm.action='/purchase/addPurchase';
-	 document.detailForm.submit();
-	 } */
-
-	/* function resetData(){
-	 document.detailForm.reset();
-	 } */
-	$(function() {
-		$("td.ct_btn01:contains('구매')").on(
-				"click",
-				function() {
-					$("form").attr("method", "post").attr("action",
-							"/purchase/addPurchase").submit();
-				})
-
-		$("td.ct_btn01:contains('취소')").on("click", function() {
-			$("form").eq(0).get(0).reset();
-		})
-
-		 $("img.show_calendar").attr("src", "/images/ct_icon_date.gif").attr(
-				"width", "15").attr("height", "15").on(
-				"click",
-				function() {
-					show_calendar('document.detailForm.receiverDate',
-							document.detailForm.receiverDate.value);
-				}) 
-	});
-</script>
+<style>
+body {
+	padding-top: 50px;
+}
+body>div.container{
+	border: 3px solid #DDDDDD;
+}
+</style>
 </head>
-
 <body>
+<div class="container">
+		<h1 class="bg-primary text-center">상품 구매</h1>
+		<form name="detailForm" class="form-horizontal">
 
-	<form name="detailForm">
-
-		<table width="100%" height="37" border="0" cellpadding="0"
+		<!-- <table width="100%" height="37" border="0" cellpadding="0"
 			cellspacing="0">
 			<tr>
 				<td width="15" height="37"><img src="/images/ct_ttl_img01.gif"
@@ -62,12 +52,148 @@
 				<td width="12" height="37"><img src="/images/ct_ttl_img03.gif"
 					width="12" height="37" /></td>
 			</tr>
-		</table>
-
-		<input type="hidden" name="prodNo"
+		</table> -->
+		
+			<div class="form-group">
+				<label for="text"  class="col-sm-offset-1 col-sm-3 control-label">상품번호</label>
+				<div class="col-sm-4">
+					<span id="helpBlock" class="help-block"> <strong>${purchase.purchaseProd.prodNo }</strong>
+					</span>
+				</div>
+			</div>
+		
+			<div class="form-group">
+				<label for="text"  class="col-sm-offset-1 col-sm-3 control-label">상품명 </label>
+				<div class="col-sm-4">
+					<span id="helpBlock" class="help-block"> <strong>${purchase.purchaseProd.prodName }</strong>
+					</span>
+				</div>
+			</div>
+		
+			<div class="form-group">
+				<label for="text"  class="col-sm-offset-1 col-sm-3 control-label">상품상세정보 </label>
+				<div class="col-sm-4">
+					<span id="helpBlock" class="help-block"> <strong>${purchase.purchaseProd.prodDetail }</strong>
+					</span>
+				</div>
+			</div>
+		
+			<div class="form-group">
+				<label for="text"  class="col-sm-offset-1 col-sm-3 control-label">제조일자 </label>
+				<div class="col-sm-4">
+					<span id="helpBlock" class="help-block"> <strong>${purchase.purchaseProd.manuDate }</strong>
+					</span>
+				</div>
+			</div>
+		
+			<div class="form-group">
+				<label for="text"  class="col-sm-offset-1 col-sm-3 control-label">가격 </label>
+				<div class="col-sm-4">
+					<span id="helpBlock" class="help-block"> <strong>${purchase.purchaseProd.price }&nbsp;원</strong>
+					</span>
+				</div>
+			</div>
+		
+			<div class="form-group">
+				<label for="text"  class="col-sm-offset-1 col-sm-3 control-label">등록일자 </label>
+				<div class="col-sm-4">
+					<span id="helpBlock" class="help-block"> <strong>${purchase.purchaseProd.regDate }</strong>
+					</span>
+				</div>
+			</div>
+		
+			<div class="form-group">
+				<label for="text"  class="col-sm-offset-1 col-sm-3 control-label">상품 수량 </label>
+				<div class="col-sm-4">
+					<span id="helpBlock" class="help-block"> 
+						<strong>${purchase.purchaseProd.prodQuantity }&nbsp; 개</strong>
+					</span>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="text"  class="col-sm-offset-1 col-sm-3 control-label">구매자아이디</label>
+				<div class="col-sm-4">
+				<span id="helpBlock" class="help-block"> 
+					<strong>${purchase.buyer.userId }</strong>
+					</span>
+					<input type="hidden" class="form-control" id="buyerId" name="buyerId" 
+					value="${purchase.buyer.userId }" placeholder="구매자아이디">
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="text"  class="col-sm-offset-1 col-sm-3 control-label">구매방법</label>
+				<div class="col-sm-4">
+					<select id="paymentOption" name="paymentOption">
+						<option value="1" selected>현금구매</option>
+						<option value="2">신용구매</option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="text"  class="col-sm-offset-1 col-sm-3 control-label">구매자이름</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="receiverName" name="receiverName" 
+					value="${purchase.buyer.userName }" placeholder="구매자이름">
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="text"  class="col-sm-offset-1 col-sm-3 control-label">구매자연락처</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="receiverPhone" name="receiverPhone"
+					value="${purchase.buyer.phone }"  placeholder="구매자연락처">
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="text"  class="col-sm-offset-1 col-sm-3 control-label">구매자주소</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="receiverAddr"name="receiverAddr"
+					value="${purchase.buyer.addr }"  placeholder="구매자주소">
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="text"  class="col-sm-offset-1 col-sm-3 control-label">구매요청사항</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="receiverRequest"name="receiverRequest"
+					 placeholder="구매요청사항">
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="text"  class="col-sm-offset-1 col-sm-3 control-label">배송희망일자</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="receiverDate" name="receiverDate" 
+					placeholder="배송희망일자" readonly="readonly">
+					<img class="show_calendar" /> 
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="text"  class="col-sm-offset-1 col-sm-3 control-label">구매 수량</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="tranQuantity" name="tranQuantity"
+					 value="1" placeholder="구매 수량">[단위 : '개']
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<div class="col-sm-offset-4  col-sm-4 text-center">
+		      		<button type="button" class="btn btn-primary"  >구매</button>
+					<button type="button" class="btn btn-primary"  >취소</button>
+				</div>
+			</div>
+			<input type="hidden" name="prodNo"
 			value="${purchase.purchaseProd.prodNo }" />
+	</form>
+</div>
+	
 
-		<table width="600" border="0" cellspacing="0" cellpadding="0"
+		<%-- <table width="600" border="0" cellspacing="0" cellpadding="0"
 			align="center" style="margin-top: 13px;">
 			<tr>
 				<td height="1" colspan="3" bgcolor="D6D6D6"></td>
@@ -265,8 +391,38 @@
 					</table>
 				</td>
 			</tr>
-		</table>
-	</form>
-
+		</table> --%>
+			
 </body>
 </html>
+
+<script type="text/javascript">
+	/* function fncAddPurchase() {
+	 document.detailForm.action='/purchase/addPurchase';
+	 document.detailForm.submit();
+	 } */
+
+	/* function resetData(){
+	 document.detailForm.reset();
+	 } */
+	$(function() {
+		$("button:contains('구매')").on(
+				"click",
+				function() {
+					$("form").attr("method", "post").attr("action",
+							"/purchase/addPurchase").submit();
+				})
+
+		$("button:contains('취소')").on("click", function() {
+			$("form").eq(0).get(0).reset();
+		})
+
+		 $("img.show_calendar").attr("src", "/images/ct_icon_date.gif").attr(
+				"width", "20").attr("height", "20").on(
+				"click",
+				function() {
+					show_calendar('document.detailForm.receiverDate',
+							document.detailForm.receiverDate.value);
+				}) 
+	});
+</script>

@@ -11,72 +11,140 @@ System.out.println("updateProduct.jsp :" +productVO);
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
 
-<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-<script type="text/javascript" src="../javascript/calendar.js"></script>
-<script type="text/javascript">
-function fncAddProduct(){
-	//Form 유효성 검증
- 	var name = document.detailForm.prodName.value;
-	var detail = document.detailForm.prodDetail.value;
-	var manuDate = document.detailForm.manuDate.value;
-	var price = document.detailForm.price.value;
+<!-- 참조 : http://getbootstrap.com/css/   참조 -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-	if(name == null || name.length<1){
-		alert("상품명은 반드시 입력하여야 합니다.");
-		return;
-	}
-	if(detail == null || detail.length<1){
-		alert("상품상세정보는 반드시 입력하여야 합니다.");
-		return;
-	}
-	if(manuDate == null || manuDate.length<1){
-		alert("제조일자는 반드시 입력하셔야 합니다.");
-		return;
-	}
-	if(price == null || price.length<1){
-		alert("가격은 반드시 입력하셔야 합니다.");
-		return;
-	}
-	
-	$("form").attr("method", "post").attr("action", "/product/updateProduct")
-	.attr("enctype", "multipart/form-data").submit();
-	/* document.detailForm.action='/product/updateProduct';
-	document.detailForm.submit(); */
+<!--  ///////////////////////// Bootstrap, jQuery CDN ////////////////////////// -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<!-- Bootstrap Dropdown Hover CSS -->
+<link href="/css/animate.min.css" rel="stylesheet">
+<link href="/css/bootstrap-dropdownhover.min.css" rel="stylesheet">
+
+<!-- Bootstrap Dropdown Hover JS -->
+<script src="/javascript/bootstrap-dropdownhover.min.js"></script>
+<script type="text/javascript" src="/javascript/calendar.js"></script>
+
+<style>
+body {
+	padding-top: 50px;
 }
-
-$(function(){
-	$("td.ct_btn01").mouseenter(function() {
-		$(this).css("font-size", "20px");
-	}).mouseleave(function() {
-		$(this).css("font-size", $("body").css("font-size"));
-	})
-	$("td.ct_btn01:contains('수정')").on("click", function() {
-		//alert($("td.ct_btn01:contains('등록')").html());
-		fncAddProduct();
-	})
-
-	$("td.ct_btn01:contains('취소')").on("click", function() {
-		//alert($("td.ct_btn01:contains('취소')").html());
-		history.go(-1);
-	})
-	$("img.show_calendar").attr("src", "../images/ct_icon_date.gif").attr(
-			"width", "15").attr("height", "15").on(
-			"click",
-			function() {
-				show_calendar('document.detailForm.manuDate',
-						document.detailForm.manuDate.value);
-			})
-});
-</script>
+</style>
 </head>
 
 <body bgcolor="#ffffff" text="#000000">
-
+<div class="container">
+<div class="page-header">
+			<h3 class=" text-info">상품수정</h3>
+		</div>
 	<!-- <form name="detailForm" method="post" enctype="multipart/form-data"> -->
+	
 	<form name="detailForm">
-		<input type="hidden" name="prodNo" value="${product.prodNo}" />
+	
+		<div class="row">
+			<div class="col-xs-4 col-md-2">
+				<strong>상품명</strong>
+			</div>
+			<div class="col-xs-8 col-md-4">
+				<input type="text" name="prodName" class="form-control"
+				 value="${product.prodName }">
+			</div>
+		</div>
 
-		<table width="100%" height="37" border="0" cellpadding="0"
+		<hr />
+	
+		<div class="row">
+			<div class="col-xs-4 col-md-2">
+				<strong>상품상세정보 </strong>
+			</div>
+			<div class="col-xs-8 col-md-4">
+				<input type="text" name="prodDetail" class="form-control"
+				 value="${product.prodDetail }">
+			</div>
+		</div>
+
+		<hr />
+	
+		<div class="row">
+			<div class="col-xs-4 col-md-2">
+				<strong>제조일자 </strong>
+			</div>
+			<div class="col-xs-8 col-md-4">
+				<input type="text" name="manuDate" class="form-control"
+				 value="${product.manuDate }">
+				 <img class="show_calendar" />
+			</div>
+		</div>
+
+		<hr />
+	
+		<div class="row">
+			<div class="col-xs-4 col-md-2">
+				<strong>가격 </strong>
+			</div>
+			<div class="col-xs-8 col-md-4">
+				<input type="text" name="price" class="form-control"
+				 value="${product.price }">
+				 [단위 : '원']
+			</div>
+		</div>
+
+		<hr />
+	
+		<div class="row">
+			<div class="col-xs-4 col-md-2">
+				<strong>상품이미지</strong>
+			</div>
+			<div class="col-xs-8 col-md-4">
+				<c:forEach var="fileName" items="${product.fileList}">
+						<img src="/images/uploadFiles/${fileName}" height="200"
+						align="absmiddle" /><br/>${fileName}<br/>
+				</c:forEach>
+			</div>
+		</div>
+
+		<hr />
+	
+		<div class="row">
+			<div class="col-xs-4 col-md-2">
+				<strong>상품이미지<br/>파일업로드</strong>
+			</div>
+			<div class="col-xs-8 col-md-4">
+				<input type="file" name="imageFileName" multiple 
+				class="image" value="${product.fileName }" />
+			</div>
+		</div>
+
+		<hr />
+	
+		<div class="row">
+			<div class="col-xs-4 col-md-2">
+				<strong>재고 수량</strong>
+			</div>
+			<div class="col-xs-8 col-md-4">
+				<input type="text" name="prodQuantity" 
+				class="form-control" value="${product.prodQuantity}" />
+				[단위 : '개']
+			</div>
+		</div>
+
+		<hr />
+
+		<div class="row">
+			<div class="col-md-12 text-center ">
+				<button type="button" class="btn btn-primary">수정</button>
+				<button type="button" class="btn btn-primary">취소</button>
+			</div>
+		</div>
+			<input type="hidden" name="prodNo" value="${product.prodNo}" />
+	</form>
+	</div>
+	
+		<%-- <table width="100%" height="37" border="0" cellpadding="0"
 			cellspacing="0">
 			<tr>
 				<td width="15" height="37"><img src="/images/ct_ttl_img01.gif"
@@ -226,8 +294,63 @@ $(function(){
 					</table>
 				</td>
 			</tr>
-		</table>
-	</form>
+		</table> --%>
+
 
 </body>
 </html>
+<script type="text/javascript">
+function fncAddProduct(){
+	//Form 유효성 검증
+ 	var name = document.detailForm.prodName.value;
+	var detail = document.detailForm.prodDetail.value;
+	var manuDate = document.detailForm.manuDate.value;
+	var price = document.detailForm.price.value;
+
+	if(name == null || name.length<1){
+		alert("상품명은 반드시 입력하여야 합니다.");
+		return;
+	}
+	if(detail == null || detail.length<1){
+		alert("상품상세정보는 반드시 입력하여야 합니다.");
+		return;
+	}
+	if(manuDate == null || manuDate.length<1){
+		alert("제조일자는 반드시 입력하셔야 합니다.");
+		return;
+	}
+	if(price == null || price.length<1){
+		alert("가격은 반드시 입력하셔야 합니다.");
+		return;
+	}
+	
+	$("form").attr("method", "post").attr("action", "/product/updateProduct")
+	.attr("enctype", "multipart/form-data").submit();
+	/* document.detailForm.action='/product/updateProduct';
+	document.detailForm.submit(); */
+}
+
+$(function(){
+	$("button").mouseenter(function() {
+		$(this).css("font-size", "20px");
+	}).mouseleave(function() {
+		$(this).css("font-size", $("body").css("font-size"));
+	})
+	$("button:contains('수정')").on("click", function() {
+		//alert($("td.ct_btn01:contains('등록')").html());
+		fncAddProduct();
+	})
+
+	$("button:contains('취소')").on("click", function() {
+		//alert($("td.ct_btn01:contains('취소')").html());
+		history.go(-1);
+	})
+	$("img.show_calendar").attr("src", "/images/ct_icon_date.gif").attr(
+			"width", "20").attr("height", "20").on(
+			"click",
+			function() {
+				show_calendar('document.detailForm.manuDate',
+						document.detailForm.manuDate.value);
+			})
+});
+</script>

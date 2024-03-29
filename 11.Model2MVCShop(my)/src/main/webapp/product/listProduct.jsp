@@ -33,14 +33,13 @@ String searchKeyword = CommonUtil.null2str(search.getSearchKeyword());
 <script src="/javascript/bootstrap-dropdownhover.min.js"></script>
 
 <style>
-body {
-	padding-top: 70px;
-}
+	body {
+		padding-top: 70px;
+	}
 
-/* tr.ct_list_pop td:nth-child(3) {
-	width: 180px;
-	height: 180px;
-} */
+ div.panel-body div{
+ font-size: 16px;
+} 
 </style>
 
 </head>
@@ -127,9 +126,6 @@ body {
 				</tbody> 
 			</table>--%>
 			<!-- <div class="page-header"></div> -->
-			<table>
-				<tr>
-					<td>
 						<div class="row" id="ct_list_pop">
 							<c:set var="i" value="0" />
 							<c:forEach var="product" items="${list}">
@@ -143,27 +139,26 @@ body {
 										</div>
 										<div class="panel-body">
 											<a href="#" class="thumbnail col-md-6 col-xs-8"> <img
-												src="/images/uploadFiles/${product.fileList[0]}">
+												src="/images/uploadFiles/${product.fileList[0]}" >
 											</a>
-											<p>&nbsp; 가격 : ${product.price }</p>
-											<p>&nbsp; 등록일 : ${product.regDate }</p>
-											<p>
-												<c:if test="${ product.prodQuantity!=0}">&nbsp; 판매 중 </c:if>
-												<c:if test="${ product.prodQuantity==0}">&nbsp; 재고 없음 </c:if>
-											</p>
-											<p>&nbsp; 재고 : ${product.prodQuantity}개</p>
+											<div class="col-md-6 col-xs-4 text-right">
+												<p>&nbsp; 가격 : ${product.price }</p><br/>
+												<p>&nbsp; 등록일</p>
+												<p>&nbsp; ${product.regDate }</p><br/>
+												<p>
+													<c:if test="${ product.prodQuantity!=0}">&nbsp; 판매 중 </c:if>
+													<c:if test="${ product.prodQuantity==0}">&nbsp; 재고 없음 </c:if>
+												</p>
+												<p>&nbsp; 재고 : ${product.prodQuantity}개</p><br/>
+											</div>
 										</div>
 									</div>
 								</div>
 							</c:forEach>
 						</div>
-					</td>
-				</tr>
-			</table>
 		</div>
 		<!--<div class="container ">-->
-	</form>
-
+		
 	<input class="maxPage" type="hidden" value=" ${resultPage.maxPage}" />
 	<input class="pageSize" type="hidden" value=" ${resultPage.pageSize}" />
 	<input class="currentPage" type="hidden" value=" ${search.currentPage}" />
@@ -172,7 +167,9 @@ body {
 	<input class="searchOrderBy" type="hidden" value=" ${search.searchOrderBy}" />
 	<input class="searchPriceLowerLimit" type="hidden" value=" ${search.searchPriceLowerLimit}" />
 	<input class="searchPriceUpperLimit" type="hidden" value=" ${search.searchPriceUpperLimit}" />
-
+	
+	</form>
+	
 </body>
 </html>
 
@@ -251,11 +248,10 @@ body {
 			+ "\n searchOrderBy : " + searchOrderBy
 			+ "\n searchPriceLowerLimit : " + searchPriceLowerLimit
 			+ "\n searchPriceUpperLimit : " + searchPriceUpperLimit);
-
+	let j = 0;
 	function fncScrollEvent() {
-		++currentPage
+		++currentPage;
 		console.log(currentPage);
-
 		$
 				.ajax(
 						"/productRest/json/listProduct",
@@ -277,7 +273,9 @@ body {
 								/* console.log(JSONData);
 								var serverData=JSON.stringify(JSONData);
 								console.log(serverData); */
-								let i = (currentPage - 1) * pageSize;
+								
+								++j;
+								let i = j*pageSize;
 								var textPop2 = "";
 								$
 										.each(
@@ -336,32 +334,31 @@ body {
 															+ ". <input value='"+product.prodNo+"' type='hidden' /> "
 															+ product.prodName
 															+ "</h3>"
-															+ "</div><div class='panel-body'><p>"
-															+ "<a href='#' class='thumbnail col-md-6  col-xs-8'> <img src='/images/uploadFiles/"+product.fileList[0]+"'></a>"
-															+ "</p><p>&nbsp; 가격 : "
+															+ "</div><div class='panel-body'>"
+															+ "<a href='#' class='thumbnail col-md-6 col-xs-8'> <img src='/images/uploadFiles/"+product.fileList[0]+"'></a>"
+															+ "<div class='col-md-6 col-xs-4 text-right'><p>&nbsp; 가격 : "
 															+ product.price
-															+ "</p><p>&nbsp; 등록일 : "
+															+ "</p><br/><p>&nbsp; 등록일</p><p>&nbsp; "
 															+ formatRegDate
-															+ "</p>"
+															+ "</p><br/>"
 															+ "<p>&nbsp; "
 															+ quantityText
 															+ "</p>"
 															+ "<p>&nbsp; 재고 : "
 															+ product.prodQuantity
-															+ "개</p></div></div></div>";
+															+ "개</p><br/></div></div></div></div>";
 
 													textPop2 += textPop;
 												});
 								textPop3 = "<div class='row' id='ct_list_pop'>"
 										+ textPop2 + "</div>"
-								console.log(textPop3);
-								$("#ct_list_pop:last").after(textPop3);
+								$("#ct_list_pop:last").append(textPop3);
 								fncLink();
 							}
 						})/* end of '$.ajax' */
 
 	}
-	$(function() {
+		$(function(){
 		fncLink();
 		$("button:contains('검색')").click(function() {
 			fncGetList('1');
@@ -390,9 +387,18 @@ body {
 		var last = document.body.scrollHeight - window.innerHeight;
 		console.log(document.body.scrollHeight + "/" + window.innerHeight);
 		console.log(document.body.scrollHeight == window.innerHeight);
-		if (currentPage <= maxPage) {
+		
+		var currentPageInt=parseInt(currentPage);
+		var maxPageInt=parseInt(maxPage);
+		console.log(currentPageInt);
+		console.log(maxPageInt);
+		console.log("currentPage < maxPage :"+(currentPageInt < maxPageInt));
+		
+		if (currentPageInt < maxPageInt) {
+
 			if (document.body.scrollHeight == window.innerHeight) {
-					fncScrollEvent();
+				fncScrollEvent();
+				fncScrollEvent();
 			}
 
 			$(window).scroll(function() {
@@ -406,7 +412,7 @@ body {
 				last = document.body.scrollHeight - window.innerHeight;//document.body.scrollHeight : body의 스크롤 총 높이, window.innerHeight : 창 안의 높이
 			})/* end of '$(window).scroll(function()' */
 
-		}/* end of 'if (currentPage <= maxPage)' */
+		} /* end of 'if (currentPage <= maxPage)' */
 
 		var fList = [];
 		$("input[name='searchKeyword']").keyup(
@@ -455,7 +461,6 @@ body {
 						}
 					})
 				})
-
 	});
 </script>
 

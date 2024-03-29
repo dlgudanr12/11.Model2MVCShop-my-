@@ -29,11 +29,11 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public void addProduct(Product product) throws Exception {
-		productDao.insertProduct(product);
+		productDao.addProduct(product);
 	}
 
 	public Product getProduct(int productNo) throws Exception {
-		return productDao.findProduct(productNo);
+		return productDao.getProduct(productNo);
 	}
 
 	public Map<String, Object> getProductList(Search search) throws Exception {

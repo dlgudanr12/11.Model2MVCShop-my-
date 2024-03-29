@@ -34,7 +34,6 @@ body {
 	padding-top: 50px;
 }
 </style>
-
 </head>
 
 <body bgcolor="#ffffff" text="#000000">
@@ -48,7 +47,7 @@ body {
 		<div class="page-header">
 			<h3 class=" text-info">상품상세조회</h3>
 			<h5 class="text-muted">
-				상품 정보가 <strong class="text-danger">구매 가능</strong>인지 확인해 주세요.
+				상품이 <strong class="text-danger">구매 가능</strong>인지 확인해 주세요.
 			</h5>
 		</div>
 

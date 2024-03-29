@@ -22,11 +22,11 @@ public class ProductDaoImpl implements ProductDao {
 		System.out.println(this.getClass());
 	}
 
-	public void insertProduct(Product product) throws Exception {
+	public void addProduct(Product product) throws Exception {
 		sqlSession.insert("ProductMapper.addProduct", product);
 	}// end of insertProduct(ProductVO productVO) method
 
-	public Product findProduct(int productNo) throws Exception {
+	public Product getProduct(int productNo) throws Exception {
 		return sqlSession.selectOne("ProductMapper.getProduct", productNo);
 	}
 
