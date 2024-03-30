@@ -142,11 +142,8 @@ body {
 				"/purchase/listDelivery").submit();
 
 	}
-	$(function() {
-		$("button:contains('검색')").click(function() {
-			fncGetList('1');
-		})
-
+	
+	function fncLink(){
 		$('tr.ct_list_pop').each(
 				function(index) {
 					$(
@@ -191,6 +188,13 @@ body {
 								})
 							})
 				})
+	}
+	
+	$(function() {
+		$("button:contains('검색')").click(function() {
+			fncGetList('1');
+		})
+		 fncLink();
 	});
 </script>
 

@@ -28,7 +28,6 @@ Product productVO = (Product) request.getAttribute("productVO");
 <script src="/javascript/bootstrap-dropdownhover.min.js"></script>
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
-
 <style>
 body {
 	padding-top: 50px;

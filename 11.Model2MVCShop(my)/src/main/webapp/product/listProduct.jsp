@@ -35,11 +35,12 @@ String searchKeyword = CommonUtil.null2str(search.getSearchKeyword());
 <style>
 	body {
 		padding-top: 70px;
+    overflow-x: hidden;
 	}
 
- div.panel-body div{
- font-size: 16px;
-} 
+	div.panel-body div{
+ 		font-size: 16px;
+	} 
 </style>
 
 </head>
@@ -131,6 +132,7 @@ String searchKeyword = CommonUtil.null2str(search.getSearchKeyword());
 							<c:forEach var="product" items="${list}">
 								<c:set var="i" value="${i+1 }" />
 								<div class="col-md-4 col-xs-12">
+									<!-- <div class="panel panel-primary"> -->
 									<div class="panel panel-default">
 										<div class="panel-heading">
 											<h3 class="panel-title">${i }.
@@ -232,6 +234,15 @@ String searchKeyword = CommonUtil.null2str(search.getSearchKeyword());
 										+ "/" + menu;
 							})
 				})
+	}
+	
+	function fncPanelPrimary() {
+		$.each($("div.panel-default"), function(index, value) {
+			/* console.log($("p:contains('판매 중')", value).text().trim() ); */
+	        if ($("p:contains('판매 중')", value).text().trim() == '판매 중') {
+	            $(value).addClass("panel panel-primary");
+	        }
+	    });/* $( selector [, context ] ) 사용법 및 panel 변경  */
 	}
 
 	var maxPage = $("input.maxPage").val();
@@ -354,12 +365,14 @@ String searchKeyword = CommonUtil.null2str(search.getSearchKeyword());
 										+ textPop2 + "</div>"
 								$("#ct_list_pop:last").append(textPop3);
 								fncLink();
+								fncPanelPrimary();
 							}
 						})/* end of '$.ajax' */
-
 	}
+	
 		$(function(){
 		fncLink();
+		fncPanelPrimary();
 		$("button:contains('검색')").click(function() {
 			fncGetList('1');
 		})
@@ -386,6 +399,7 @@ String searchKeyword = CommonUtil.null2str(search.getSearchKeyword());
 		/* $( "tfoot.a:last" ).after( $( "tfoot.a:first" ).clone() ); */
 		var last = document.body.scrollHeight - window.innerHeight;
 		console.log(document.body.scrollHeight + "/" + window.innerHeight);
+		console.log(document.body.scrollWidth + "/" + window.innerWidth);
 		console.log(document.body.scrollHeight == window.innerHeight);
 		
 		var currentPageInt=parseInt(currentPage);
@@ -395,15 +409,11 @@ String searchKeyword = CommonUtil.null2str(search.getSearchKeyword());
 		console.log("currentPage < maxPage :"+(currentPageInt < maxPageInt));
 		
 		if (currentPageInt < maxPageInt) {
-
-			if (document.body.scrollHeight == window.innerHeight) {
-				fncScrollEvent();
-				fncScrollEvent();
-			}
+			fncScrollEvent();
+			fncScrollEvent();
 
 			$(window).scroll(function() {
-				console.log($(window).scrollTop());
-
+				/* console.log( last+"/"+$(window).scrollTop() ); */
 				if ($(window).scrollTop() == last) {
 					fncScrollEvent();
 

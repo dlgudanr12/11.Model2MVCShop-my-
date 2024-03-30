@@ -132,7 +132,7 @@ public class PurchaseRestController {
 		Map<String, Object> map = purchaseService.getPurchaseList(search, userId);
 		Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
 				pageSize);
-		System.out.println("listPurchase.resultPage ::" + resultPage);
+		System.out.println("listPurchase ::" + map.get("list"));
 
 //		modelAndView.addObject("list", map.get("list"));
 		map.put("resultPage", resultPage);

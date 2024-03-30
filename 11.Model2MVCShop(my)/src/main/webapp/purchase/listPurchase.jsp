@@ -63,23 +63,30 @@ body {
 						<c:set var="i" value="${i+1 }" />
 						<tr class="ct_list_pop" align="left">
 							<td align="center">${i }</td>
-							<td><a href="/purchase/getPurchase/${purchase.tranNo }/search">${purchase.tranNo }</a>
+							<td><%-- <a href="/purchase/getPurchase/${purchase.tranNo }/search">${purchase.tranNo }</a> --%>
+								${purchase.tranNo }
 							</td>
 							<td>${purchase.buyer.userId }</td>
 							<td>${purchase.receiverName }</td>
 							<td>${purchase.purchaseProd.prodName }</td>
 							<td>${purchase.tranQuantity }</td>
 							<td>${purchase.receiverPhone }</td>
-							<td><c:if test="${purchase.tranCode=='1' }">구매완료
-								<a href="/purchase/updatePurchase/${purchase.tranNo }">구매 수정</a>
-								</c:if> <c:if test="${purchase.tranCode=='2' }">배송중</c:if> <c:if test="${purchase.tranCode=='3' }">배송완료</c:if>
+							<td>
+								<c:if test="${purchase.tranCode=='1' }">구매완료
+									<%-- <a href="/purchase/updatePurchase/${purchase.tranNo }">구매 수정</a> --%>
+									<span>구매 수정</span>
+								</c:if> 
+								<c:if test="${purchase.tranCode=='2' }">배송중</c:if>
+								<c:if test="${purchase.tranCode=='3' }">배송완료</c:if>
 							</td>
-							<td><input type="hidden" value="${purchase.tranCode }" /> <c:if
-									test="${purchase.tranCode=='2' }">
-									<!-- <a
-									href="/purchase/updateTranCode/${purchase.tranNo }/${purchase.tranCode }">물건도착</a> -->
+							<td>
+								<input type="hidden" value="${purchase.tranCode }" /> 
+								<c:if test="${purchase.tranCode=='2' }">
+									<!-- <a href="/purchase/updateTranCode/${purchase.tranNo }/${purchase.tranCode }">
+									물건도착</a> -->
 									물건도착
-							</c:if></td>
+							</c:if>
+							</td>
 						</tr>
 					</c:forEach>
 				</tbody>
@@ -89,6 +96,10 @@ body {
 			<input type="hidden" id="currentPage" name="currentPage" value="" />
 			<jsp:include page="../common/pageNavigatorDefault.jsp" />
 			<!--  페이지 Navigator 끝 -->
+			
+			<input class="maxPage" type="hidden" value=" ${resultPage.maxPage}" />
+			<input class="pageSize" type="hidden" value=" ${resultPage.pageSize}" />
+			<input class="userId" type="hidden" value=" ${sessionScope.user.userId}" />
 		</form>
 
 	</div><!-- <div class="container"> -->
@@ -105,14 +116,11 @@ body {
 		$("form").attr("method", "post").attr("action",
 				"/purchase/listPurchase").submit();
 	}
-	$(function() {
-		$('tr.ct_list_pop').each(
-				function(index) {
-					$(
-							"tr.ct_list_pop:nth-child(" + (index + 1)
-									+ ") td:contains('물건도착')").on(
-							"click",
-							function() {
+	
+	function fncLink(){
+		$('tr.ct_list_pop').each(function(index) {
+			
+			$("tr.ct_list_pop:nth-child(" + (index + 1)+ ") td:contains('물건도착')").click(function() {
 								var tranNo = $(
 										"tr.ct_list_pop:nth-child("
 												+ (index + 1)
@@ -143,9 +151,111 @@ body {
 												.text("배송완료");
 									}
 								})
-							})
+							})/* end of 물건도착 link  */
+							
+							$("tr.ct_list_pop:nth-child(" + (index + 1)+ ") td span:contains('구매 수정')").click(function() {
+								self.location="/purchase/updatePurchase/"+$( "tr.ct_list_pop:nth-child(" + (index + 1)+ ") td:nth-child(2)" ).text();
+							})	/* end of 구매 수정 link  */
+							
+							$("tr.ct_list_pop:nth-child(" + (index + 1)+ ") td:nth-child(2)").click(function() {
+								self.location="/purchase/getPurchase/"+$( "tr.ct_list_pop:nth-child(" + (index + 1)+ ") td:nth-child(2)" ).text()+"/search";
+							})	/* end of 구매 정보 확인 link  */
 				})
+	}
+	var maxPage = $("input.maxPage").val();
+	var pageSize = $("input.pageSize").val();
+	var currentPage = $("input.currentPage").val();
+	var userId=$("input.userId").val().trim();
+	console.log("currentPage : " + currentPage );
+	let j = 0;
+	function fncScrollEvent() {
+		++currentPage;
+		console.log(currentPage);
+		$
+				.ajax(
+						"/purchaseRest/json/listPurchase",
+						{
+							method : "POST",
+							dataType : "json",
+							headers : {
+								"Content-Type" : "application/json"
+							},
+							data : JSON.stringify({
+								currentPage : currentPage,
+								userId : userId
+							}),
+							success : function(JSONData, status) {
+								++j;
+								let i = j*pageSize;
+								var textPop2="";
+								$.each(JSONData.list,function(index, purchase) {
+										// 여기서 index는 배열의 인덱스이고, item은 각 요소를 나타냅니다
+										++i;
+										console.log("Index: "+ index+ ", Item: "+ JSON.stringify(purchase));
+										var tranCodeText = "";
+										var trabCodeText2 = "";
+										if (purchase.tranCode == 1 ) {
+											tranCodeText = "구매완료 <span>구매 수정</span>";
+										} else if(purchase.tranCode == 2 ){
+											tranCodeText = "배송중";
+										} else if(purchase.tranCode == 3 ){
+											tranCodeText = "배송완료";
+										}else{
+											tranCodeText = "";
+										}
+										
+										if(purchase.tranCode == 2 ){
+											tranCodeText2 = "물건도착";
+										}else{
+											tranCodeText2 = "";
+										}
+										var receiverPhone=(purchase.receiverPhone != null) ? purchase.receiverPhone : "";
+													var textPop = "<tr class='ct_list_pop' align='left'>"
+													+"<td align='center'>"+i+"</td>"
+													+"<td>"+purchase.tranNo+"</td>"
+													+"<td>"+purchase.buyer.userId+"</td>"
+													+"<td>"+purchase.receiverName+"</td>"
+													+"<td>"+purchase.purchaseProd.prodName+"</td>"
+													+"<td>"+purchase.tranQuantity+"</td>"
+													+"<td>"+receiverPhone+"</td>"
+													+"<td>"+tranCodeText+"</td>"
+													+"<td><input type='hidden' value='"+purchase.tranCode+"' />"+tranCodeText2+"</td>"
+													+"</tr>";
+													
+													textPop2 += textPop;
+												});
+								$("tr.ct_list_pop:last").after(textPop2);
+								fncLink();
+							}
+						})/* end of '$.ajax' */
+	}
+	
+	$(function() {
+		fncLink();
+		
+		var currentPageInt=parseInt(currentPage);
+		var maxPageInt=parseInt(maxPage);
+		var last = document.body.scrollHeight - window.innerHeight;
+		if (currentPageInt < maxPageInt) {
+			fncScrollEvent();
+			fncScrollEvent();
+			fncScrollEvent();
+			fncScrollEvent();
+			fncScrollEvent();
+			fncScrollEvent();
+
+			$(window).scroll(function() {
+				if ($(window).scrollTop() == last) {
+					fncScrollEvent();
+
+					window.scrollTo(0, last);//window.scrollTo(x축,y축);
+				}/* end of 'if ( $(window).scrollTop() == last) ' */
+				last = document.body.scrollHeight - window.innerHeight;//document.body.scrollHeight : body의 스크롤 총 높이, window.innerHeight : 창 안의 높이
+			})/* end of '$(window).scroll(function()' */
+
+		} /* end of 'if (currentPage <= maxPage)' */
 	});
+			
 	/* const currentPage="${resultPage.currentPage}";
 	var userId="${user.userId}";
 		alert(currentPage+"/"+userId) 

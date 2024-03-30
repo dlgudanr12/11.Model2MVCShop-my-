@@ -62,7 +62,9 @@ public class PurchaseServiceImpl implements PurchaseService {
 		Purchase purchase = purchaseDao.getPurchase(tranNo);
 		purchase.setBuyer(userDao.getUser(purchase.getBuyer().getUserId()));
 		purchase.setPurchaseProd(productDao.getProduct(purchase.getPurchaseProd().getProdNo()));
-
+		
+		purchase.setDivyDate(purchase.getDivyDate().substring(0,10));//날짜 규격화
+		
 		purchase.setPaymentOption(purchase.getPaymentOption().trim());
 		purchase.setTranCode(purchase.getTranCode().trim());
 

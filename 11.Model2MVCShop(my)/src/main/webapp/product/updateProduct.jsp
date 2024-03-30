@@ -38,9 +38,9 @@ body {
 
 <body bgcolor="#ffffff" text="#000000">
 <div class="container">
-<div class="page-header">
-			<h3 class=" text-info">상품수정</h3>
-		</div>
+	<div class="page-header">
+		<h3 class=" text-info">상품수정</h3>
+	</div>
 	<!-- <form name="detailForm" method="post" enctype="multipart/form-data"> -->
 	
 	<form name="detailForm">
