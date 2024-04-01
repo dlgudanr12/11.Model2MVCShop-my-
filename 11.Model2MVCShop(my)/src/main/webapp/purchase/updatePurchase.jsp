@@ -104,8 +104,11 @@ body {
 				<strong>备概磊林家</strong>
 			</div>
 			<div class="col-xs-8 col-md-4">
-				<input type="text" name="divyAddr"
-				class="form-control" value="${purchase.divyAddr }" >
+					<input type="hidden" class="form-control" id="divyAddr-reading" name="divyAddr-reading"
+					value="${purchase.divyAddr }"  placeholder="备概磊林家">
+					<jsp:include page="/homeAddress.jsp"/>
+				<input type="hidden" id="divyAddr" name="divyAddr"
+				class="form-control" value="" >
 			</div>
 		</div>
 
@@ -304,12 +307,14 @@ body {
 		</table> --%>
 
 </body>
-</html>
 <script type="text/javascript">
+
+parseAddress();
 	$(function() {
 		$("button:contains('荐沥')").on(
 				"click",
 				function() {
+					submitAddress();
 					$("form").attr("method", "post").attr("action",
 							"/purchase/updatePurchase").submit();
 				})
@@ -327,3 +332,4 @@ body {
 				})
 	});
 </script>
+</html>

@@ -151,8 +151,11 @@ body>div.container{
 			<div class="form-group">
 				<label for="text"  class="col-sm-offset-1 col-sm-3 control-label">备概磊林家</label>
 				<div class="col-sm-4">
-					<input type="text" class="form-control" id="receiverAddr"name="receiverAddr"
+					<input type="hidden" class="form-control" id="divyAddr-reading"name="divyAddr-reading"
 					value="${purchase.buyer.addr }"  placeholder="备概磊林家">
+					<jsp:include page="/homeAddress.jsp"/>
+					<input type="hidden" class="form-control" id="divyAddr" name="divyAddr"
+					value=""  placeholder="备概磊林家">
 				</div>
 			</div>
 			
@@ -394,8 +397,6 @@ body>div.container{
 		</table> --%>
 			
 </body>
-</html>
-
 <script type="text/javascript">
 	/* function fncAddPurchase() {
 	 document.detailForm.action='/purchase/addPurchase';
@@ -405,16 +406,19 @@ body>div.container{
 	/* function resetData(){
 	 document.detailForm.reset();
 	 } */
+	 parseAddress();/* end of 林家 檬扁拳 of <jsp:include page="/homeAddress.jsp"/>*/
 	$(function() {
 		$("button:contains('备概')").on(
 				"click",
 				function() {
+					submitAddress();
 					$("form").attr("method", "post").attr("action",
 							"/purchase/addPurchase").submit();
 				})
 
 		$("button:contains('秒家')").on("click", function() {
 			$("form").eq(0).get(0).reset();
+			parseAddress();
 		})
 
 		 $("img.show_calendar").attr("src", "/images/ct_icon_date.gif").attr(
@@ -424,5 +428,7 @@ body>div.container{
 					show_calendar('document.detailForm.receiverDate',
 							document.detailForm.receiverDate.value);
 				}) 
+				
 	});
 </script>
+</html>

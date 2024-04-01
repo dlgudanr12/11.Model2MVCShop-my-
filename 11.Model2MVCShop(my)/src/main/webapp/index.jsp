@@ -108,8 +108,10 @@
 					<ul class="list-group">
 						<li class="list-group-item"><a href="#">개인정보조회</a> <i class="glyphicon glyphicon-user"></i>
 						</li>
+						<c:if test="${user.role == 'admin'}">
 						<li class="list-group-item"><a href="#">회원정보조회</a> <i class="glyphicon glyphicon-th-list"></i>
 						</li>
+						</c:if>
 					</ul>
 				</div>
 

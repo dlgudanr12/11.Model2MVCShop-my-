@@ -154,6 +154,7 @@ body {
 							}).mouseleave(function() {
 						$(this).css("color", "blue");
 					})
+					
 					$(
 							"tr.ct_list_pop:nth-child(" + (index + 1)
 									+ ") td:contains('배송하기') span").css(

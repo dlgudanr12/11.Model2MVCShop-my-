@@ -160,7 +160,24 @@ body {
 							$("tr.ct_list_pop:nth-child(" + (index + 1)+ ") td:nth-child(2)").click(function() {
 								self.location="/purchase/getPurchase/"+$( "tr.ct_list_pop:nth-child(" + (index + 1)+ ") td:nth-child(2)" ).text()+"/search";
 							})	/* end of 구매 정보 확인 link  */
-				})
+							
+							
+								$("tr.ct_list_pop:nth-child(" + (index + 1) + ") td span:contains('구매 수정')")
+								.css("color","blue")
+								.mouseenter(function() {
+											$(this).css("color", "red");
+								}).mouseleave(function() {
+									$(this).css("color", "blue");
+								})
+								
+								$("tr.ct_list_pop:nth-child(" + (index + 1) + ") td:nth-child(2)")
+								.css("color","blue")
+								.mouseenter(function() {
+											$(this).css("color", "red");
+								}).mouseleave(function() {
+									$(this).css("color", "blue");
+								})
+				})/*end of each*/
 	}
 	var maxPage = $("input.maxPage").val();
 	var pageSize = $("input.pageSize").val();

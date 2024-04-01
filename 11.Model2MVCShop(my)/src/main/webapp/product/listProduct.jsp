@@ -214,8 +214,14 @@ String searchKeyword = CommonUtil.null2str(search.getSearchKeyword());
 				
 				function(index) {
 					
-					$("div.panel-heading:eq(" + index + ")").click(
-							function() {
+					$("div.panel-heading:eq(" + index + ")")
+					.css("color","black")
+					.mouseenter(function() {
+						$(this).css("color", "red");
+					}).mouseleave(function() {
+						$(this).css("color", "black");
+					})
+					.click(function() {
 								prodNo = $(
 										"div.panel-heading:eq(" + index
 												+ ") h3 input").val();

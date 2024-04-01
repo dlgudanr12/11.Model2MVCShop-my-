@@ -34,66 +34,7 @@
             padding-top : 50px;
         }
     </style>
-    
-     <!--  ///////////////////////// JavaScript ////////////////////////// -->
-	<script type="text/javascript">
-	
-		//============= "수정"  Event 연결 =============
-		 $(function() {
-			//==> DOM Object GET 3가지 방법 ==> 1. $(tagName) : 2.(#id) : 3.$(.className)
-			$( "button.btn.btn-primary" ).on("click" , function() {
-				fncUpdateUser();
-			});
-		});	
-		
-		
-		//============= "취소"  Event 처리 및  연결 =============
-		$(function() {
-			//==> DOM Object GET 3가지 방법 ==> 1. $(tagName) : 2.(#id) : 3.$(.className)
-			$("a[href='#' ]").on("click" , function() {
-				$("form")[0].reset();
-			});
-		});	
-		
-		//=============이메일" 유효성Check  Event 처리 =============
-		 $(function() {
-			 
-			 $("input[name='email']").on("change" , function() {
-					
-				 var email=$("input[name='email']").val();
-			    
-				 if(email != "" && (email.indexOf('@') < 1 || email.indexOf('.') == -1) ){
-			    	alert("이메일 형식이 아닙니다.");
-			     }
-			});
-			 
-		});	
-		
-		///////////////////////////////////////////////////////////////////////
-		function fncUpdateUser() {
-			var name=$("input[name='userName']").val();
-			
-			if(name == null || name.length <1){
-				alert("이름은  반드시 입력하셔야 합니다.");
-				return;
-			}
-				
-			var value = "";	
-			if( $("input[name='phone2']").val() != ""  &&  $("input[name='phone3']").val() != "") {
-				var value = $("option:selected").val() + "-" 
-									+ $("input[name='phone2']").val() + "-" 
-									+ $("input[name='phone3']").val();
-			}
-			
-			//Debug...
-			//alert("phone : "+value);
-			$("input:hidden[name='phone']").val( value );
-				
-			$("form").attr("method" , "POST").attr("action" , "/user/updateUser").submit();
-		}
-	
-	</script>
-	
+
 </head>
 
 <body>
@@ -147,7 +88,9 @@
 		  <div class="form-group">
 		    <label for="ssn" class="col-sm-offset-1 col-sm-3 control-label">주소</label>
 		    <div class="col-sm-4">
-		      <input type="text" class="form-control" id="addr" name="addr"  value="${user.addr}" placeholder="변경주소">
+		      <input type="hidden" class="form-control" id="addr-reading" name="addr-reading"  value="${user.addr}" placeholder="변경주소">
+		      <jsp:include page="/homeAddress.jsp"/>
+		      <input type="hidden" class="form-control" id="addr" name="addr"  value="${user.addr}" placeholder="변경주소">
 		    </div>
 		  </div>
 		  
@@ -189,7 +132,66 @@
 	    
  	</div>
 	<!--  화면구성 div Start /////////////////////////////////////-->
- 	
 </body>
+<!--  ///////////////////////// JavaScript ////////////////////////// -->
+	<script type="text/javascript">
+	
+		//============= "수정"  Event 연결 =============
+		 $(function() {
+			//==> DOM Object GET 3가지 방법 ==> 1. $(tagName) : 2.(#id) : 3.$(.className)
+			$( "button.btn.btn-primary" ).on("click" , function() {
+				fncUpdateUser();
+			});
+		});	
+		
+		
+		//============= "취소"  Event 처리 및  연결 =============
+		$(function() {
+			//==> DOM Object GET 3가지 방법 ==> 1. $(tagName) : 2.(#id) : 3.$(.className)
+			$("a[href='#' ]").on("click" , function() {
+				$("form")[0].reset();
+				parseAddress();
+			});
+		});	
+		
+		//=============이메일" 유효성Check  Event 처리 =============
+		 $(function() {
+			 
+			 $("input[name='email']").on("change" , function() {
+					
+				 var email=$("input[name='email']").val();
+			    
+				 if(email != "" && (email.indexOf('@') < 1 || email.indexOf('.') == -1) ){
+			    	alert("이메일 형식이 아닙니다.");
+			     }
+			});
+			 
+		});	
+		
+		 parseAddress();
+		///////////////////////////////////////////////////////////////////////
+		function fncUpdateUser() {
+			var name=$("input[name='userName']").val();
+			
+			if(name == null || name.length <1){
+				alert("이름은  반드시 입력하셔야 합니다.");
+				return;
+			}
+				
+			var value = "";	
+			if( $("input[name='phone2']").val() != ""  &&  $("input[name='phone3']").val() != "") {
+				var value = $("option:selected").val() + "-" 
+									+ $("input[name='phone2']").val() + "-" 
+									+ $("input[name='phone3']").val();
+			}
+			
+			//Debug...
+			//alert("phone : "+value);
+			$("input:hidden[name='phone']").val( value );
+			submitAddress();
+			$("form").attr("method" , "POST").attr("action" , "/user/updateUser").submit();
+		}
+	
+	</script>	
+</html> 
 
-</html>
