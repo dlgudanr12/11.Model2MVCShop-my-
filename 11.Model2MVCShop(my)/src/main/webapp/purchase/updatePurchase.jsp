@@ -23,7 +23,10 @@
 
 <!-- Bootstrap Dropdown Hover JS -->
 <script src="/javascript/bootstrap-dropdownhover.min.js"></script>
-<script type="text/javascript" src="../javascript/calendar.js"></script>
+<!-- <script type="text/javascript" src="../javascript/calendar.js"></script> -->
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 <style>
 body {
 	padding-top: 50px;
@@ -131,10 +134,10 @@ body {
 				<strong>배송희망일자</strong>
 			</div>
 			<div class="col-xs-8 col-md-4">
-				<input type="text" name="divyDate" readonly
-				class="form-control" value="" />
-				<img class="show_calendar"/>
-				기존 배달 도착 일 &nbsp; ${purchase.divyDate}
+				<input type="text" id="divyDate"  name="divyDate" readonly
+				class="form-control" value="${purchase.divyDate}" />
+				<!-- <img class="show_calendar"/> -->
+				<%-- 기존 배달 도착 일 &nbsp; ${purchase.divyDate} --%>
 			</div>
 		</div>
 
@@ -323,13 +326,16 @@ parseAddress();
 			history.go(-1);
 		})
 
-		$("img.show_calendar").attr("src", "/images/ct_icon_date.gif").attr(
+		/* $("img.show_calendar").attr("src", "/images/ct_icon_date.gif").attr(
 				"width", "20").attr("height", "20").on(
 				"click",
 				function() {
 					show_calendar('document.detailForm.divyDate',
 							document.detailForm.divyDate.value);
-				})
+				}) */
+				$("#divyDate").datepicker({
+					dateFormat :"yy-mm-dd"
+				});
 	});
 </script>
 </html>

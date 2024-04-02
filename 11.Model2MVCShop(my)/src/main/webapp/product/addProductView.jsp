@@ -20,7 +20,10 @@
 
 <!-- Bootstrap Dropdown Hover JS -->
 <script src="/javascript/bootstrap-dropdownhover.min.js"></script>
-<script type="text/javascript" src="/javascript/calendar.js"></script>
+<!-- <script type="text/javascript" src="/javascript/calendar.js"></script> -->
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
 <style>
 body {
@@ -62,8 +65,8 @@ body>div.container{
 			<div class="form-group">
 				<label for="text"  class="col-sm-offset-1 col-sm-3 control-label">力炼老磊</label>
 				<div class="col-sm-4">
-					<input type="text"class="form-control" id="manuDate" name="manuDate" placeholder="力炼老磊">
-					<img class="show_calendar" />
+					<input type="text"class="form-control" id="manuDate" name="manuDate" placeholder="力炼老磊" readonly="readonly">
+					<!-- <img class="show_calendar" /> -->
 				</div>
 			</div>
 		
@@ -262,12 +265,16 @@ body>div.container{
 			$("form").eq(0).get(0).reset();
 		})
 
-		$("img.show_calendar").attr("src", "/images/ct_icon_date.gif").attr(
+		/* $("img.show_calendar").attr("src", "/images/ct_icon_date.gif").attr(
 				"width", "20").attr("height", "20").on(
 				"click",
 				function() {
 					show_calendar('document.detailForm.manuDate',
 							document.detailForm.manuDate.value);
-				})
+				}) */
+				
+			$("#manuDate").datepicker({
+				dateFormat :"yy-mm-dd"
+			});
 	});
 </script>

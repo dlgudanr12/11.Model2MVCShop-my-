@@ -29,6 +29,8 @@ System.out.println("updateProduct.jsp :" +productVO);
 <script src="/javascript/bootstrap-dropdownhover.min.js"></script>
 <script type="text/javascript" src="/javascript/calendar.js"></script>
 
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 <style>
 body {
 	padding-top: 50px;
@@ -74,9 +76,9 @@ body {
 				<strong>제조일자 </strong>
 			</div>
 			<div class="col-xs-8 col-md-4">
-				<input type="text" name="manuDate" class="form-control"
-				 value="${product.manuDate }">
-				 <img class="show_calendar" />
+				<input type="text" id="manuDate" name="manuDate" class="form-control"
+				 value="${product.manuDate }" readonly="readonly">
+				 <!-- <img class="show_calendar" /> -->
 			</div>
 		</div>
 
@@ -102,7 +104,7 @@ body {
 			<div class="col-xs-8 col-md-4">
 				<c:forEach var="fileName" items="${product.fileList}">
 						<img src="/images/uploadFiles/${fileName}" height="200"
-						align="absmiddle" /><br/>${fileName}<br/>
+						align="absmiddle" /><br/><span id="fileNames">${fileName}</span><br/>
 				</c:forEach>
 			</div>
 		</div>
@@ -115,7 +117,8 @@ body {
 			</div>
 			<div class="col-xs-8 col-md-4">
 				<input type="file" name="imageFileName" multiple 
-				class="image" value="${product.fileName }" />
+				class="image" />
+				<input type="hidden" name="imageFileName2" value="${product.fileName }"/>
 			</div>
 		</div>
 
@@ -345,12 +348,15 @@ $(function(){
 		//alert($("td.ct_btn01:contains('취소')").html());
 		history.go(-1);
 	})
-	$("img.show_calendar").attr("src", "/images/ct_icon_date.gif").attr(
+	/* $("img.show_calendar").attr("src", "/images/ct_icon_date.gif").attr(
 			"width", "20").attr("height", "20").on(
 			"click",
 			function() {
 				show_calendar('document.detailForm.manuDate',
 						document.detailForm.manuDate.value);
-			})
+			}) */
+	$("#manuDate").datepicker({
+		dateFormat :"yy-mm-dd"
+	});
 });
 </script>

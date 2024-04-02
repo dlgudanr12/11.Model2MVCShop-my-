@@ -23,6 +23,9 @@
 
 <!-- Bootstrap Dropdown Hover JS -->
 <script src="/javascript/bootstrap-dropdownhover.min.js"></script>
+<!-- 다음 지도 -->
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=	faa9f6e25e1a4383862e7e761de66dc7"></script>
+
 <style>
 body {
 	padding-top: 50px;
@@ -88,7 +91,7 @@ body {
 			<div class="col-xs-4 col-md-2">
 				<strong>구매자주소</strong>
 			</div>
-			<div class="col-xs-8 col-md-4">${purchase.divyAddr }</div>
+			<div id="divyAddr" class="col-xs-8 col-md-4" >${purchase.divyAddr }</div>
 		</div>
 
 		<hr />
@@ -117,6 +120,11 @@ body {
 			</div>
 			<div class="col-xs-8 col-md-4">${purchase.orderDate }</div>
 		</div>
+
+		<hr />
+		
+		구매자 주소 위치
+		<div id="map" style="width:100%;height:400px;"></div>
 
 		<hr />
 
@@ -295,6 +303,54 @@ body {
 			self.location ="/purchase/listPurchase";
 			//alert($("td.ct_btn01:contains('등록')").html());
 			/* history.go(-1); */
+		})
+		
+		
+		let divyAddr=$("#divyAddr").text().trim();
+		let divyAddrArr=divyAddr.split('/');
+		let encodeDivyAddr = encodeURIComponent(divyAddrArr[0]);
+		console.log("encodeDivyAddr : "+encodeDivyAddr);
+		$.ajax( "https://dapi.kakao.com/v2/local/search/address.json?query="+encodeDivyAddr,
+			{
+			method : "GET",
+			dataType : "json",
+			headers : {
+				"Authorization" : "KakaoAK 51766a3b079f70146b3f776193a45d3a",
+				"content-type" : "application/json;charset=UTF-8"
+			},
+			success : function(JSONData, status) {
+				console.log(JSONData);
+				console.log(JSONData.documents[0].x+"/"+JSONData.documents[0].y);
+				/* $("#map").append("<br/>"+JSONData.documents[0].x+"/"+JSONData.documents[0].y); */
+				let x=JSONData.documents[0].x;
+				let y=JSONData.documents[0].y;
+				let marker={
+						position: new kakao.maps.LatLng(y,x),
+						text: '배달 주소'
+				};
+				let container=document.getElementById('map');
+				let options={
+						center:new kakao.maps.LatLng(y,x),
+						level: 3,
+						marker:marker
+					};
+				/* let map=new kakao.maps.Map(container,options); */
+				let staticMap = new kakao.maps.StaticMap(container, options);
+				
+				/* let marker = new kakao.maps.Marker();
+				kakao.maps.event.addListener(map, 'tilesloaded', displayMarker);
+				function displayMarker() {
+				    
+				    // 마커의 위치를 지도중심으로 설정합니다 
+				    marker.setPosition(map.getCenter()); 
+				    marker.setMap(map); 
+
+				    // 아래 코드는 최초 한번만 타일로드 이벤트가 발생했을 때 어떤 처리를 하고 
+				    // 지도에 등록된 타일로드 이벤트를 제거하는 코드입니다 
+				    // kakao.maps.event.removeListener(map, 'tilesloaded', displayMarker);
+				} */
+			}
+			
 		})
 	});
 </script>

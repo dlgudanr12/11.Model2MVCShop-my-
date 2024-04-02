@@ -20,7 +20,10 @@
 
 <!-- Bootstrap Dropdown Hover JS -->
 <script src="/javascript/bootstrap-dropdownhover.min.js"></script>
-<script type="text/javascript" src="/javascript/calendar.js"></script>
+<!-- <script type="text/javascript" src="/javascript/calendar.js"></script> -->
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 <style>
 body {
 	padding-top: 50px;
@@ -170,7 +173,7 @@ body>div.container{
 			<div class="form-group">
 				<label for="text"  class="col-sm-offset-1 col-sm-3 control-label">배송희망일자</label>
 				<div class="col-sm-4">
-					<input type="text" class="form-control" id="receiverDate" name="receiverDate" 
+					<input type="text" class="form-control" id="divyDate" name="divyDate" 
 					placeholder="배송희망일자" readonly="readonly">
 					<img class="show_calendar" /> 
 				</div>
@@ -397,6 +400,7 @@ body>div.container{
 		</table> --%>
 			
 </body>
+</html>
 <script type="text/javascript">
 	/* function fncAddPurchase() {
 	 document.detailForm.action='/purchase/addPurchase';
@@ -406,7 +410,7 @@ body>div.container{
 	/* function resetData(){
 	 document.detailForm.reset();
 	 } */
-	 parseAddress();/* end of 주소 초기화 of <jsp:include page="/homeAddress.jsp"/>*/
+	 parseAddress();/* end of 주소 초기화 of "/homeAddress.jsp"*/
 	$(function() {
 		$("button:contains('구매')").on(
 				"click",
@@ -421,14 +425,15 @@ body>div.container{
 			parseAddress();
 		})
 
-		 $("img.show_calendar").attr("src", "/images/ct_icon_date.gif").attr(
+		/*  $("img.show_calendar").attr("src", "/images/ct_icon_date.gif").attr(
 				"width", "20").attr("height", "20").on(
 				"click",
 				function() {
 					show_calendar('document.detailForm.receiverDate',
 							document.detailForm.receiverDate.value);
-				}) 
-				
+				})  */
+		$("#divyDate").datepicker({
+			dateFormat :"yy-mm-dd"
+		});
 	});
 </script>
-</html>
